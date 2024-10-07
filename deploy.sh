@@ -8,7 +8,7 @@
 # tested in qemu & real hw.
 
 
-set -e
+set -ex
 
 GH_REPO_URL="https://raw.githubusercontent.com/cuzrawr/kexec390/refs/heads/main/"
 BASE_URL="https://dl-cdn.alpinelinux.org/alpine/"
@@ -134,44 +134,33 @@ gather_ntwrk() {
 
 
 fetch_files() {
-    curl_cmd="curl --progress-bar"
+	curl_cmd="curl --progress-bar"
 
-    if [ ! -f "$INITRD_KEXEC" ]; then
-        curl_cmd="$curl_cmd -O ${NETBOOT_URL}${INITRD_KEXEC}"
-    fi
 
-    if [ ! -f "$KERNEL_KEXEC" ]; then
-        case "$KERNEL_KEXEC" in
-            "bzImage") curl_cmd="$curl_cmd -O ${GH_REPO_URL}bzImage" ;;
-            "vmlinuz-lts") curl_cmd="$curl_cmd -O ${NETBOOT_URL}vmlinuz-lts" ;;
-            *) curl_cmd="$curl_cmd -O ${GH_REPO_URL}bzImage" ;;
-        esac
-    fi
+	[ ! -f "$INITRD_KEXEC" ] && curl_cmd+=" -O ${NETBOOT_URL}${INITRD_KEXEC}"
 
-    if [ ! -f "$KEY_FILE" ]; then
-        curl_cmd="$curl_cmd -O ${GH_REPO_URL}${KEY_FILE}"
-    fi
+	if [ ! -f "$KERNEL_KEXEC" ]; then
+		case "$KERNEL_KEXEC" in
+			"bzImage") curl_cmd+=" -O ${GH_REPO_URL}bzImage" ;;
+			"vmlinuz-lts") curl_cmd+=" -O ${NETBOOT_URL}vmlinuz-lts" ;;
+			*) curl_cmd+=" -O ${GH_REPO_URL}bzImage" ;;
+		esac
+	fi
 
-    if [ ! -f "$PUB_KEY_FILE" ]; then
-        curl_cmd="$curl_cmd -O ${GH_REPO_URL}${PUB_KEY_FILE}"
-    fi
+	[ ! -f "$KEY_FILE" ] && curl_cmd+=" -O ${GH_REPO_URL}${KEY_FILE}"
+	[ ! -f "$PUB_KEY_FILE" ] && curl_cmd+=" -O ${GH_REPO_URL}${PUB_KEY_FILE}"
 
-    if [ "$curl_cmd" != "curl --progress-bar" ]; then
-        eval "$curl_cmd"
-    fi
-    return 0
+
+	[ "$curl_cmd" != "curl --progress-bar" ] && eval "$curl_cmd"
+	return 0
 }
 
 check_files() {
-    for file in "$INITRD_KEXEC" "$KERNEL_KEXEC" "$KEY_FILE" "$PUB_KEY_FILE"; do
-        if [ ! -f "$file" ]; then
-            echo "Error: $file not found."
-            exit 1
-        fi
-    done
-    return 0
+	for file in "${INITRD_KEXEC}" "${KERNEL_KEXEC}" "$KEY_FILE" "$PUB_KEY_FILE"; do
+		[ ! -f "$file" ] && { echo "Error: $file not found."; exit 1; }
+	done
+	return 0
 }
-
 
 
 
@@ -239,9 +228,9 @@ main() {
 
 
 	# Generate URLs for file fetching
-	#NETBOOT_URL="${BASE_URL}${ALPINE_VERSION}${NETBOOT_PATH}"
+	NETBOOT_URL="${BASE_URL}${ALPINE_VERSION}${NETBOOT_PATH}"
 
-	#echo "netboot url is: ${NETBOOT_URL}"
+	echo "netboot url is: ${NETBOOT_URL}"
 
 	fetch_files
 	check_files
@@ -257,7 +246,6 @@ main() {
 	if [ "$USESTATIC" = "YES" ]; then
 		gather_ntwrk
 	fi
-
 	echo -e "\nPrivate key (save to your local machine):\n"
 	cat "$KEY_FILE"
 
