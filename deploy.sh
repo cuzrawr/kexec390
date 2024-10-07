@@ -67,12 +67,6 @@ EOF
 
 
 
-# Check if the script is running in Bash
-if [ -z "$BASH_VERSION" ]; then
-    echo "Error: This script must be run in Bash."
-    exit 1
-fi
-
 
 # check
 #[ "$(id -u)" -ne 0 ] && { echo "Error: Must be run as root."; exit 1; }
