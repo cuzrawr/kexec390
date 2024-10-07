@@ -22,6 +22,8 @@ DEBUG_SW=""
 # if not used --static that will be default
 IPCONF=" ip=dhcp "
 
+
+
 display_usage() {
 	program=$(basename "$0")
 	cat <<EOF
@@ -225,12 +227,12 @@ main() {
 		guided_mode
 	fi
 
-
-
 	# Generate URLs for file fetching
-	NETBOOT_URL="${BASE_URL}${ALPINE_VERSION}${NETBOOT_PATH}"
-
+	NETBOOT_URL="$BASE_URL$ALPINE_VERSION$NETBOOT_PATH"
 	echo "netboot url is: ${NETBOOT_URL}"
+
+
+	#echo "netboot url is: ${NETBOOT_URL}"
 
 	fetch_files
 	check_files
