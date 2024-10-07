@@ -235,7 +235,7 @@ main() {
 	fetch_files
 	check_files
 
-	clear
+	#clear
 
 
 	# if arg static used we will try to generate ip= string
