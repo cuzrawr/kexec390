@@ -134,28 +134,39 @@ gather_ntwrk() {
 
 
 
-
 fetch_files() {
 	curl_cmd="curl --progress-bar"
 
-
+	# Check
 	[ ! -f "$INITRD_KEXEC" ] && curl_cmd+=" -O ${NETBOOT_URL}${INITRD_KEXEC}"
 
+	# check
 	if [ ! -f "$KERNEL_KEXEC" ]; then
-		case "$KERNEL_KEXEC" in
-			"bzImage") curl_cmd+=" -O ${GH_REPO_URL}bzImage" ;;
-			"vmlinuz-lts") curl_cmd+=" -O ${NETBOOT_URL}vmlinuz-lts" ;;
-			*) curl_cmd+=" -O ${GH_REPO_URL}bzImage" ;;
-		esac
+	    case "$KERNEL_KEXEC" in
+	        "bzImage")
+	            curl_cmd+=" -O ${GH_REPO_URL}bzImage"
+	            ;;
+	        "vmlinuz-lts")
+	            curl_cmd+=" -O ${NETBOOT_URL}vmlinuz-lts"
+	            ;;
+	        *)
+	            curl_cmd+=" -O ${GH_REPO_URL}bzImage"
+	            ;;
+	    esac
 	fi
 
+	# Check for the KEY_FILE and PUB_KEY_FILE
 	[ ! -f "$KEY_FILE" ] && curl_cmd+=" -O ${GH_REPO_URL}${KEY_FILE}"
 	[ ! -f "$PUB_KEY_FILE" ] && curl_cmd+=" -O ${GH_REPO_URL}${PUB_KEY_FILE}"
 
+	#
+	if [ "$curl_cmd" != "curl --progress-bar" ]; then
+	    eval "$curl_cmd"
+	fi
 
-	[ "$curl_cmd" != "curl --progress-bar" ] && eval "$curl_cmd"
 	return 0
 }
+
 
 check_files() {
 	for file in "${INITRD_KEXEC}" "${KERNEL_KEXEC}" "$KEY_FILE" "$PUB_KEY_FILE"; do
