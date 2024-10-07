@@ -8,7 +8,7 @@
 # tested in qemu & real hw.
 
 
-set -ex
+set -e
 
 GH_REPO_URL="https://raw.githubusercontent.com/cuzrawr/kexec390/refs/heads/main/"
 BASE_URL="https://dl-cdn.alpinelinux.org/alpine/"
