@@ -59,9 +59,11 @@ Usage examples:
 Note:
   The bzImage provided with all options enabled (=y).
 
+WARNING:
   If you are running ~6.6 (vmlinuz-lts) in qemu-s390x with host OS x86_64 then
   , there is a bug: Alpine will not boot. ( all ver. 3.10-3.20, edge tested).
-  So use only provided bzImage for such case. For real HW its not required.
+  So use only provided bzImage for such case. For real HW seems hitting same bug.
+  So 6.12+git kernel proof to works.
 
 EOF
 }
