@@ -134,33 +134,44 @@ gather_ntwrk() {
 
 
 fetch_files() {
-	curl_cmd="curl --progress-bar"
+    curl_cmd="curl --progress-bar"
 
+    if [ ! -f "$INITRD_KEXEC" ]; then
+        curl_cmd="$curl_cmd -O ${NETBOOT_URL}${INITRD_KEXEC}"
+    fi
 
-	[ ! -f "$INITRD_KEXEC" ] && curl_cmd+=" -O ${NETBOOT_URL}${INITRD_KEXEC}"
+    if [ ! -f "$KERNEL_KEXEC" ]; then
+        case "$KERNEL_KEXEC" in
+            "bzImage") curl_cmd="$curl_cmd -O ${GH_REPO_URL}bzImage" ;;
+            "vmlinuz-lts") curl_cmd="$curl_cmd -O ${NETBOOT_URL}vmlinuz-lts" ;;
+            *) curl_cmd="$curl_cmd -O ${GH_REPO_URL}bzImage" ;;
+        esac
+    fi
 
-	if [ ! -f "$KERNEL_KEXEC" ]; then
-		case "$KERNEL_KEXEC" in
-			"bzImage") curl_cmd+=" -O ${GH_REPO_URL}bzImage" ;;
-			"vmlinuz-lts") curl_cmd+=" -O ${NETBOOT_URL}vmlinuz-lts" ;;
-			*) curl_cmd+=" -O ${GH_REPO_URL}bzImage" ;;
-		esac
-	fi
+    if [ ! -f "$KEY_FILE" ]; then
+        curl_cmd="$curl_cmd -O ${GH_REPO_URL}${KEY_FILE}"
+    fi
 
-	[ ! -f "$KEY_FILE" ] && curl_cmd+=" -O ${GH_REPO_URL}${KEY_FILE}"
-	[ ! -f "$PUB_KEY_FILE" ] && curl_cmd+=" -O ${GH_REPO_URL}${PUB_KEY_FILE}"
+    if [ ! -f "$PUB_KEY_FILE" ]; then
+        curl_cmd="$curl_cmd -O ${GH_REPO_URL}${PUB_KEY_FILE}"
+    fi
 
-
-	[ "$curl_cmd" != "curl --progress-bar" ] && eval "$curl_cmd"
-	return 0
+    if [ "$curl_cmd" != "curl --progress-bar" ]; then
+        eval "$curl_cmd"
+    fi
+    return 0
 }
 
 check_files() {
-	for file in "${INITRD_KEXEC}" "${KERNEL_KEXEC}" "$KEY_FILE" "$PUB_KEY_FILE"; do
-		[ ! -f "$file" ] && { echo "Error: $file not found."; exit 1; }
-	done
-	return 0
+    for file in "$INITRD_KEXEC" "$KERNEL_KEXEC" "$KEY_FILE" "$PUB_KEY_FILE"; do
+        if [ ! -f "$file" ]; then
+            echo "Error: $file not found."
+            exit 1
+        fi
+    done
+    return 0
 }
+
 
 
 
