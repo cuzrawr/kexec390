@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+
+
+# REWRITE NET TO SUPPORT ONLY SH
 
 # Kexec Script for s390x using Alpine Linux
 # Automatically fetches the required files and executes kexec.
