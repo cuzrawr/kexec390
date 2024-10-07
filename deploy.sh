@@ -92,35 +92,28 @@ gather_ntwrk() {
 
 
 	cidr_to_netmask() {
-	    cidr=$1
-	    mask=""
-	    full_octets=$((cidr / 8))
-	    partial_octet=$((cidr % 8))
+		local cidr=$1
+		local mask=""
+		local full_octets=$((cidr / 8))
+		local partial_octet=$((cidr % 8))
 
-	    # Full 255 octets
-	    i=0
-	    while [ "$i" -lt "$full_octets" ]; do
-	        mask="$mask255"
-	        if [ "$i" -lt 3 ]; then
-	            mask="$mask."
-	        fi
-	        i=$((i + 1))
-	    done
+		# Full 255 octets
+		for ((i=0; i<full_octets; i++)); do
+			mask+=255
+			[[ $i -lt 3 ]] && mask+=.
+		done
 
-	    # Partial octet
-	    if [ "$full_octets" -lt 4 ]; then
-	        octet=$((256 - 2 ** (8 - partial_octet)))
-	        mask="$mask$octet"
-	        i=$((full_octets + 1))
-	        while [ "$i" -lt 4 ]; do
-	            mask="$mask.0"
-	            i=$((i + 1))
-	        done
-	    fi
+		# Partial octet
+		if [[ $full_octets -lt 4 ]]; then
+			local octet=$((256 - 2**(8-partial_octet)))
+			mask+=$octet
+			for ((i=full_octets+1; i<4; i++)); do
+				mask+=.0
+			done
+		fi
 
-	    echo "$mask"
+		echo $mask
 	}
-
 
 	# Get default iface
 	IFNM=$(ip -c=never -o link show | grep -oP '(?<=^2:\s)\w+')
@@ -269,7 +262,6 @@ main() {
 	if [ "$USESTATIC" = "YES" ]; then
 		gather_ntwrk
 	fi
-
 	echo -e "\nPrivate key (save to your local machine):\n"
 	cat "$KEY_FILE"
 
