@@ -74,16 +74,6 @@ EOF
 
 
 
-# check
-[ "$(id -u)" -ne 0 ] && { echo "Error: Must be run as root."; exit 1; }
-
-# check
-command -v kexec >/dev/null || { echo "Error: kexec-tools is not installed."; exit 1; }
-
-# Check
-[ -e /proc/sys/kernel/kexec_load_disabled ] && [ "$(cat /proc/sys/kernel/kexec_load_disabled)" -ne 0 ] && \
-    { echo "Error: kexec is disabled."; exit 1; }
-
 
 
 gather_ntwrk() {
@@ -226,6 +216,18 @@ guided_mode() {
 
 
 main() {
+
+
+	# check
+	[ "$(id -u)" -ne 0 ] && { echo "Error: Must be run as root."; exit 1; }
+
+	# check
+	command -v kexec >/dev/null || { echo "Error: kexec-tools is not installed."; exit 1; }
+
+	# Check
+	[ -e /proc/sys/kernel/kexec_load_disabled ] && [ "$(cat /proc/sys/kernel/kexec_load_disabled)" -ne 0 ] && \
+	    { echo "Error: kexec is disabled."; exit 1; }
+
 
 
 	# Generate URLs for file fetching
