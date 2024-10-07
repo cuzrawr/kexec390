@@ -205,7 +205,7 @@ guided_mode() {
 		read -p "Enter the number: " staticip_choice
 
 		case $staticip_choice in
-			1) IPCONF="DHCP" ;;
+			1) echo "$IPCONF" ;;
 			2) USESTATIC="YES" ;;
 			*) echo "Invalid choice. Using default DHCP." ;;
 		esac
