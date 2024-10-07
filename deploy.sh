@@ -226,10 +226,7 @@ guided_mode() {
 
 
 main() {
-	# Parse command-line arguments
-	if [ $# -eq 0 ]; then
-		guided_mode
-	fi
+
 
 	# Generate URLs for file fetching
 	NETBOOT_URL="$BASE_URL$ALPINE_VERSION$NETBOOT_PATH"
@@ -287,6 +284,11 @@ main() {
 
 }
 
+
+# Parse command-line arguments
+if [ $# -eq 0 ]; then
+	guided_mode
+fi
 
 while [ $# -gt 0 ]; do
 	case "$1" in
