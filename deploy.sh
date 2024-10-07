@@ -271,7 +271,7 @@ main() {
 		set -x
 
 		kexec $DEBUG_SW -l "$(pwd)/${KERNEL_KEXEC}" --initrd="$(pwd)/${INITRD_KEXEC}" \
-			--append=" ${IPCONF} alpine_repo=${BASE_URL}${ALPINE_VERSION}/main modloop=${BASE_URL}${ALPINE_VERSION}${NETBOOT_PATH}modloop-lts ssh_key=${GH_REPO_URL}${PUB_KEY_FILE} dasd=0.0.0100 s390x_net=qeth_l2,0.0.1000,0.0.1001,0.0.1002 "
+			--append=" $IPCONF alpine_repo=${BASE_URL}${ALPINE_VERSION}/main modloop=${BASE_URL}${ALPINE_VERSION}${NETBOOT_PATH}modloop-lts ssh_key=${GH_REPO_URL}${PUB_KEY_FILE} dasd=0.0.0100 s390x_net=qeth_l2,0.0.1000,0.0.1001,0.0.1002 "
 		kexec -e $DEBUG_SW
 		set +x
 	}
