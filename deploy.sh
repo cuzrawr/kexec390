@@ -246,10 +246,10 @@ main() {
 	if [ "$USESTATIC" = "YES" ]; then
 		gather_ntwrk
 	fi
-	echo -e "\nPrivate key (save to your local machine):\n"
+	echo "\nPrivate key (save to your local machine):\n"
 	cat "$KEY_FILE"
 
-	echo -e "\nExample SSH usage: \n\nchmod 600 randssh.key && ssh -i randssh.key root@1.1.1.1 \n\n"
+	echo "\nExample SSH usage: \n\nchmod 600 randssh.key && ssh -i randssh.key root@1.1.1.1 \n\n"
 
 
 	#
