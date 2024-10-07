@@ -266,9 +266,10 @@ main() {
 	# test
 	# basically we taking current host net config as well known working one.
 	# see gather_ntwrk() to details
-	if [ "$USESTATIC" == "YES" ]; then
+	if [ "$USESTATIC" = "YES" ]; then
 		gather_ntwrk
 	fi
+
 	echo -e "\nPrivate key (save to your local machine):\n"
 	cat "$KEY_FILE"
 
