@@ -3,6 +3,10 @@
 # WARNING ALPINE LINUX KERNEL CURRENTLY COMPLETELY BROKEN, USE THAT ONE
 # WHAT I PROVIDE.
 
+# There tested params for s390x HW (qemu works too without -s ):
+#
+# ./deploy.sh -s -k "bzImage" -i "initramfs-lts" -n
+#
 # =
 
 # Kexec Script for s390x using Alpine Linux
@@ -240,7 +244,7 @@ main() {
 	fetch_files
 	check_files
 
-	clear
+
 
 
 	# if arg static used we will try to generate ip= string
